@@ -3,4 +3,5 @@
 
 <img src="https://github.com/filipeas/reqm/blob/master/Documenta%C3%A7%C3%A3o/logo.png" width="100"/>
 
-* Project under construction.
+* Funções implementadas:
+1) Gestão de Usuário
