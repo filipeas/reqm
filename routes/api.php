@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
@@ -12,4 +14,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::put('update/password/{user}', [UserController::class, 'updatePassword'])->name('user.update.password');
         Route::delete('delete/{user}', [UserController::class, 'destroy'])->name('user.delete');
     });
+
+    Route::resource('project', ProjectController::class)->middleware(['auth']);
 });

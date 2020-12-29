@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUser;
 use App\Http\Requests\CheckUser;
-use App\Http\Requests\DeleteUser;
 use App\Http\Requests\UpdatePasswordUser;
 use App\Http\Requests\UpdateUser;
 use App\Models\User;
-use App\Rules\ValidCurrentUserById;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
@@ -42,16 +40,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUser $request, $id)
+    public function update(UpdateUser $request, User $user)
     {
-        try {
-            $user = User::findOrFail($id);
-            $user->name = $request->get('name');
-            $user->save();
-            return response()->json(['message' => 'User updated successfully.', $status = 200])->setStatusCode(200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'User not found.'], $status = 404)->setStatusCode(404);
-        }
+        $user->name = $request->get('name');
+        $user->save();
+        return response()->json(['message' => 'User updated successfully.', $status = 200])->setStatusCode(200);
     }
 
     /**
@@ -61,16 +54,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function updatePassword(UpdatePasswordUser $request, $id)
+    public function updatePassword(UpdatePasswordUser $request, User $user)
     {
-        try {
-            $user = User::findOrFail($id);
-            $user->password = $request->get('password');
-            $user->save();
-            return response()->json(['message' => 'Password updated successfully.', $status = 200])->setStatusCode(200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'User not found.'], $status = 404)->setStatusCode(404);
-        }
+        $user->password = $request->get('password');
+        $user->save();
+        return response()->json(['message' => 'Password updated successfully.', $status = 200])->setStatusCode(200);
     }
 
     /**
@@ -79,14 +67,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        try {
-            $user = User::findOrFail($id);
+        if (auth()->user()->id == $user->id)
             $user->delete();
-            return response()->json(['message' => 'Password updated successfully.', $status = 200])->setStatusCode(200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'User not found.'], $status = 404)->setStatusCode(404);
-        }
+        else
+            return response()->json(['message' => 'User not found.', $status = 404])->setStatusCode(404);
+
+        return response()->json(['message' => 'User removed successfully.', $status = 200])->setStatusCode(200);
     }
 }

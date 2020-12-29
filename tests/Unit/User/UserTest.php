@@ -3,7 +3,6 @@
 namespace Tests\Unit\User;
 
 use App\Models\User;
-use Faker\Factory;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertEquals;
@@ -121,7 +120,6 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)->deleteJson(route('user.delete', ['user' => 1]))
-            ->dump()
             ->assertStatus(200)
             ->assertJsonStructure(['message']);
     }
